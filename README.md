@@ -1,6 +1,6 @@
 # Vault Data Tools
 
-When a Sandbox Vault exceeds its <a href="https://platform.veevavault.help/en/gr/48988/#sandbox-sizes--limits">data limits</a>, Vault admins must delete object records or document versions to clear the block. Vault Data Tools is a command-line tool that simplifies this process, allowing users to quickly count and then delete sandbox data in bulk. And because it’s open-source, developers can extend and modify the tool to suit custom use cases.
+When a Sandbox Vault exceeds its <a href="https://platform.veevavault.help/en/gr/48988/#sandbox-sizes--limits">data limits</a>, Vault admins must delete object records or document versions to clear the block. Vault Data Tools is a command-line tool that simplifies this process, allowing users to quickly count and then delete Sandbox data in bulk. And because it’s open-source, developers can extend and modify the tool to suit custom use cases.
 
 ## Setup
 
