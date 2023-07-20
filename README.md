@@ -119,7 +119,7 @@ java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action DELETE -vaultDNS
 java -jar vault-data-tools-23.1.0.jar -datatype DOCUMENTS -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
-4. Delete Specific Objects Types
+4. Delete Specific Objects
 
 ```
 java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action DELETE -input ./objects-to-delete.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
