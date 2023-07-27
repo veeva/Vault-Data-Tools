@@ -8,8 +8,8 @@ This tool is distributed as a single JAR file, and does not require installation
 click on the "Download" button. From there, the jar file can be run from a command line console.
 
 Download the
-latest <a href="https://github.com/veeva/Vault-Data-Tools/blob/main/vault-data-tools-23.1.0.jar">
-vault-data-tools-23.1.0.jar</a>.
+latest <a href="https://github.com/veeva/Vault-Data-Tools/blob/main/vault-data-tools-23.1.1.jar">
+vault-data-tools-23.1.1.jar</a>.
 
 ## Quick Start
 
@@ -43,31 +43,31 @@ java -jar {jarFile} -datatype {datatype} -action {actionName} -input {filepath} 
 1. Count All Data
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype ALL -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype ALL -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 2. Count All Objects
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype OBJECTS -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 3. Count All Documents
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype DOCUMENTS -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype DOCUMENTS -action COUNT -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 4. Count Specific Objects
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype DOCUMENTS -action COUNT -input ./objects-to-count.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype DOCUMENTS -action COUNT -input ./objects-to-count.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 5. Count All Custom Objects (Exclude System/Standard)
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action COUNT -exclude SYSTEM,STANDARD -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype OBJECTS -action COUNT -exclude SYSTEM,STANDARD -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 <br />
@@ -104,35 +104,35 @@ java -jar {jarFile} -datatype {datatype} -action {actionName} -input {filepath} 
 1. Delete All Data
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype ALL -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype ALL -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 2. Delete All Objects
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype OBJECTS -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 3. Delete All Documents
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype DOCUMENTS -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype DOCUMENTS -action DELETE -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 4. Delete Specific Objects
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action DELETE -input ./objects-to-delete.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype OBJECTS -action DELETE -input ./objects-to-delete.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 5. Delete Specific Document Types
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype DOCUMENTS -action DELETE -input ./documents-to-delete.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype DOCUMENTS -action DELETE -input ./documents-to-delete.csv -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
 
 6. Delete All Custom Objects (Exclude System/Standard)
 
 ```
-java -jar vault-data-tools-23.1.0.jar -datatype OBJECTS -action DELETE -exclude SYSTEM,STANDARD -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
+java -jar vault-data-tools-23.1.1.jar -datatype OBJECTS -action DELETE -exclude SYSTEM,STANDARD -vaultDNS cholecap.veevavault.com -username my-username@cholecap.veevavault.com -password "my-password"
 ```
