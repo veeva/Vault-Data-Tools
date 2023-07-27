@@ -361,11 +361,11 @@ public class DeleteVaultData {
                             }
 
                             appendListToQuery(query, relationship.getField(), idList);
+                            relationshipCount++;
                         }
 
                     }
                 }
-                relationshipCount++;
             }
             // Skip querying this object since it's not in the input and its related objects don't have data to delete
             if (!hasRelatedData && !hasInputData) {
