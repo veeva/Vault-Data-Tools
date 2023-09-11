@@ -8,7 +8,7 @@ This tool is distributed as a single JAR file, and does not require installation
 click on the "Download" button. From there, the jar file can be run from a command line console.
 
 Download the
-latest <a href="https://gitlab.veevadev.com/veevavaultdevsupport/vault-data-tools/-/blob/main/vault-data-tools-23.2.0.jar">
+latest <a href="https://github.com/veeva/Vault-Data-Tools/blob/main/vault-data-tools-23.2.0.jar">
 vault-data-tools-23.2.0.jar</a>.
 
 ## Quick Start
