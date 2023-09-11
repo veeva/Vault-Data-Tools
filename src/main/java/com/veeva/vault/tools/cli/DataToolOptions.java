@@ -226,8 +226,8 @@ public class DataToolOptions extends VaultModel {
     public enum Exclude {
         SYSTEM("SYSTEM"),
         STANDARD("STANDARD"),
-        CUSTOM("CUSTOM");
-
+        CUSTOM("CUSTOM"),
+        APPLICATION("APPLICATION");
         String exclude;
 
         Exclude(String exclude) {

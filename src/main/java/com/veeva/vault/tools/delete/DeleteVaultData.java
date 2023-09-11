@@ -41,7 +41,16 @@ public class DeleteVaultData {
     public void process(DataToolOptions dataToolOptions) {
 
         action = dataToolOptions.getAction();
-        dataType = dataToolOptions.getDataType();
+        try {
+            dataType = dataToolOptions.getDataType();
+            if (dataType == null) {
+                logger.error("Datatype is required");
+                return;
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Unknown datatype provided; Expected values = " + Arrays.asList(DataToolOptions.DataType.values()));
+            return;
+        }
 
         if (dataToolOptions.getInput() != null) {
             File inputFile = dataToolOptions.getInputFile();
@@ -89,7 +98,6 @@ public class DeleteVaultData {
                 break;
 
             default:
-                logger.error("Unknown data type [" + dataType + "]; Expected values = [OBJECTS, DOCUMENTS, ALL]");
                 return;
         }
 
@@ -363,7 +371,6 @@ public class DeleteVaultData {
                             appendListToQuery(query, relationship.getField(), idList);
                             relationshipCount++;
                         }
-
                     }
                 }
             }
@@ -399,7 +406,7 @@ public class DeleteVaultData {
         QueryResponse queryResponse = Client.getVaultClient().newRequest(QueryRequest.class).query(query);
         List<QueryResponse.QueryResult> queryResultList = new ArrayList<>();
 
-        if (queryResponse != null && queryResponse.isSuccessful() && queryResponse.getData().size() > 0) {
+        if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE") && queryResponse.getData().size() > 0) {
 
             queryResultList.addAll(queryResponse.getData());
 
@@ -409,7 +416,7 @@ public class DeleteVaultData {
                     String nextPage = queryResponse.getResponseDetails().getNextPage();
                     queryResponse = Client.getVaultClient().newRequest(QueryRequest.class).queryByPage(nextPage);
 
-                    if (queryResponse != null && queryResponse.isSuccessful()) {
+                    if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE")) {
                         queryResultList.addAll(queryResponse.getData());
                     }
                 }
@@ -455,7 +462,7 @@ public class DeleteVaultData {
         // Query the provided target and delete its data
         QueryResponse queryResponse = Client.getVaultClient().newRequest(QueryRequest.class).query(query);
 
-        if (queryResponse != null && queryResponse.isSuccessful() && queryResponse.getData().size() > 0) {
+        if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE") && queryResponse.getData().size() > 0) {
 
             // Delete the first page
             deleteData(target, type, queryResponse.getData());
@@ -466,7 +473,7 @@ public class DeleteVaultData {
                     String nextPage = queryResponse.getResponseDetails().getNextPage();
                     queryResponse = Client.getVaultClient().newRequest(QueryRequest.class).queryByPage(nextPage);
 
-                    if (queryResponse != null && queryResponse.isSuccessful()) {
+                    if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE")) {
                         deleteData(target, type, queryResponse.getData());
                     }
                 }
