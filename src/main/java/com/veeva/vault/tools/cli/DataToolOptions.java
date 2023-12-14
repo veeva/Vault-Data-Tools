@@ -95,6 +95,19 @@ public class DataToolOptions extends VaultModel {
     }
 
     //------------------------------------------------------------------------------------------------
+    // Is Read Only: Expected Values [TRUE, FALSE]
+    //------------------------------------------------------------------------------------------------
+    @JsonProperty("readOnly")
+    @JsonAlias({"readonly"})
+    public String getReadyOnly() {
+        return this.getString("readOnly");
+    }
+
+    public void setReadOnly(String readOnly) {
+        this.set("readOnly", readOnly);
+    }
+
+    //------------------------------------------------------------------------------------------------
     // Vault Authentication Details
     //------------------------------------------------------------------------------------------------
     @JsonProperty("vaultDNS")

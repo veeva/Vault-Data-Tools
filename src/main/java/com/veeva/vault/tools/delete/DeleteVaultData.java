@@ -31,6 +31,7 @@ public class DeleteVaultData {
     private HashMap<String, List<String>> inputData;
     private List<DataToolOptions.Exclude> excludeSources;
     private CSVWriter csvWriter;
+    private Boolean isReadOnly;
 
     /**
      * Main driver method for DeleteVaultData. Processes the given DataToolOptions and performs data deletion based on
@@ -71,15 +72,32 @@ public class DeleteVaultData {
             excludeSources = dataToolOptions.getExcludeList();
         }
 
+        if (dataToolOptions.getReadyOnly() != null) {
+            if (dataToolOptions.getReadyOnly().equalsIgnoreCase("true") || dataToolOptions.getReadyOnly().equalsIgnoreCase("false")) {
+                isReadOnly = Boolean.valueOf(dataToolOptions.getReadyOnly());
+            } else {
+                logger.error("Unknown value provided for readOnly; Expected values = [TRUE, FALSE]");
+                return;
+            }
+        }
+
         // Confirm user wants to proceed with deleting data
         if (dataType != null && !confirmDataDeletion()) {
             return;
         }
 
-        String outputFileName = FileUtil.formatFileName("delete-data-output.csv");
+        String readOnlyFileNameModifier = "";
+        if (isReadOnly != null && isReadOnly) {
+            readOnlyFileNameModifier = "read-only-";
+        }
+        String outputFileName = FileUtil.formatFileName(readOnlyFileNameModifier + "delete-data-output.csv");
         csvWriter = FileUtil.getCsvWriter(outputFileName);
 
         String[] outputHeaders = {"action", "data_type", "name", "id", "status", "error_message"};
+        if (isReadOnly != null && isReadOnly) {
+            outputHeaders = new String[] {"data_type", "name", "id"};
+        }
+
         List<String[]> headerData = Collections.singletonList(outputHeaders);
         FileUtil.writeDataToCsv(headerData, csvWriter);
 
@@ -135,6 +153,14 @@ public class DeleteVaultData {
             }
         }
 
+        String warningMessage = "";
+        if (isReadOnly != null && isReadOnly) {
+            warningMessage = "READ-ONLY mode enabled. No data will be deleted.\n" +
+                    "The data that would be deleted based on the current inputs will be written to file.";
+        } else {
+            warningMessage = "You are about to permanently delete this data from your Vault. THIS CANNOT BE UNDONE.";
+        }
+
         /*
          Intentionally using System.out instead of Logger to draw attention to this section and make it obvious
          the user needs to confirm before proceeding with bulk deletion
@@ -145,8 +171,7 @@ public class DeleteVaultData {
         System.out.print(selectedDataToDelete);
         System.out.print(excludedSourcesString);
         System.out.println();
-        System.out.println("You are about to permanently delete this data from your Vault.");
-        System.out.println("THIS CANNOT BE UNDONE.");
+        System.out.println(warningMessage);
         System.out.println();
         System.out.println("-------------------------------------------------------------------------------------");
         System.out.print("Do you wish to proceed? (Y/N) ");
@@ -209,7 +234,11 @@ public class DeleteVaultData {
             // Delete the data in sorted order
             for (String object : sorted) {
                 if (allDataToDelete.containsKey(object)) {
-                    deleteData(object, "", allDataToDelete.get(object));
+                    if (isReadOnly != null && isReadOnly) {
+                        writeReadOnlyResultsToCSV("OBJECTS", object, allDataToDelete.get(object));
+                    } else {
+                        deleteData(object, "", allDataToDelete.get(object));
+                    }
                 }
             }
         }
@@ -443,9 +472,23 @@ public class DeleteVaultData {
                     continue;
                 }
 
-                String query = String.format("SELECT id FROM documents WHERE type__v = '%s'", docType.getLabel());
+                StringBuilder query = new StringBuilder();
+                query.append("SELECT id FROM documents WHERE type__v = '").append(docType.getLabel()).append("'");
 
-                deleteDataHandler("documents", docType.getName(), query);
+                // If the input contains this document type and has idParams, add those idParamValues to query
+                if (inputData != null && inputData.containsKey(docType.getName())) {
+                    // Only add idParamValues to the query if provided in the input
+                    if (inputData.get(docType.getName()).size() > 1) {
+                        String idParam = inputData.get(docType.getName()).get(0);
+                        int paramValuesSize = inputData.get(docType.getName()).size();
+                        List<String> idParamValues = inputData.get(docType.getName()).subList(1, paramValuesSize);
+                        if (!idParam.isEmpty() && idParamValues.size() > 0) {
+                            query.append(" AND ");
+                            appendListToQuery(query, idParam, idParamValues);
+                        }
+                    }
+                }
+                deleteDataHandler("documents", docType.getName(), query.toString());
             }
         }
     }
@@ -464,8 +507,12 @@ public class DeleteVaultData {
 
         if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE") && queryResponse.getData().size() > 0) {
 
-            // Delete the first page
-            deleteData(target, type, queryResponse.getData());
+            if (isReadOnly != null && isReadOnly) {
+                writeReadOnlyResultsToCSV(target, type, queryResponse.getData());
+            } else {
+                // Delete the first page
+                deleteData(target, type, queryResponse.getData());
+            }
 
             if (queryResponse.isPaginated()) {
 
@@ -474,7 +521,12 @@ public class DeleteVaultData {
                     queryResponse = Client.getVaultClient().newRequest(QueryRequest.class).queryByPage(nextPage);
 
                     if (queryResponse != null && !queryResponse.getResponseStatus().equalsIgnoreCase("FAILURE")) {
-                        deleteData(target, type, queryResponse.getData());
+
+                        if (isReadOnly != null && isReadOnly) {
+                            writeReadOnlyResultsToCSV(target, type, queryResponse.getData());
+                        } else {
+                            deleteData(target, type, queryResponse.getData());
+                        }
                     }
                 }
             }
@@ -631,5 +683,23 @@ public class DeleteVaultData {
         } else {
             return "";
         }
+    }
+
+    /**
+     * In read-only mode, writes the data to be deleted to CSV
+     *
+     * @param dataType - OBJECTS or DOCUMENTS
+     * @param name - the object name or document type to be deleted
+     * @param dataToDelete - List of QueryResults to be deleted
+     */
+    private void writeReadOnlyResultsToCSV(String dataType, String name, List<QueryResponse.QueryResult> dataToDelete) {
+        List<String[]> outputData = new ArrayList<>();
+
+        for (QueryResponse.QueryResult row : dataToDelete) {
+            String[] currentOutput = { dataType.toUpperCase(), name, row.get("id").toString()};
+            outputData.add(currentOutput);
+        }
+
+        FileUtil.writeDataToCsv(outputData, csvWriter);
     }
 }

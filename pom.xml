@@ -6,7 +6,7 @@
 
     <groupId>com.veeva.vault</groupId>
     <artifactId>vault-data-tools</artifactId>
-    <version>23.2.0</version>
+    <version>23.3.0</version>
 
     <packaging>jar</packaging>
 
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.veeva.vault</groupId>
             <artifactId>vapil</artifactId>
-            <version>23.2.0</version>
+            <version>23.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
